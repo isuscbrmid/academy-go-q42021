@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"go-capstone/common"
+	"go-capstone/entities"
 	"go-capstone/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -24,5 +25,18 @@ func ReadCsv(c *gin.Context) {
 		c.String(err.HttpCode, err.Message)
 	} else {
 		c.String(http.StatusOK, "user with email: "+user.Email+" was found.")
+	}
+}
+
+func AddCsv(c *gin.Context) {
+	var users []entities.User
+	c.BindJSON(&users)
+
+	_, err := repositories.SaveUsers(users)
+
+	if err.HttpCode != 0 {
+		c.String(err.HttpCode, err.Message)
+	} else {
+		c.String(http.StatusOK, "saved users")
 	}
 }
